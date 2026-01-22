@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Code Slides</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            /* VS Code Dark */
+            --card-bg: #252526;
+            --text-primary: #d4d4d4;
+            --text-secondary: #858585;
+            --accent-color: #569cd6;
+            /* VS Code Blue */
+            --keyword-color: #c586c0;
+            /* Purple */
+            --string-color: #ce9178;
+            /* Orange */
+            --border-color: #333;
+            --code-font: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            --body-font: 'Inter', -apple-system, system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #111;
+            font-family: var(--body-font);
+            color: var(--text-primary);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        /* Phone Screen Ratio 9:16 */
+        .slide {
+            width: 375px;
+            height: 667px;
+            background-color: var(--bg-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            /* Slightly rounded for modern feel */
+        }
+
+        /* Top Bar dots (macOS style) */
+        .window-controls {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .control {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .red {
+            background-color: #ff5f56;
+        }
+
+        .yellow {
+            background-color: #ffbd2e;
+        }
+
+        .green {
+            background-color: #27c93f;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-family: var(--code-font);
+            font-size: 10px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .slide-title {
+            font-size: 20px;
+            color: #fff;
+            margin: 5px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Line number style decoration for titles */
+        .slide-title::before {
+            content: "function";
+            color: var(--keyword-color);
+            font-family: var(--code-font);
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .card h3 {
+            margin-bottom: 4px;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            /* Match bg but maybe add border */
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-family: var(--code-font);
+            font-size: 12px;
+            color: #9cdcfe;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        blockquote {
+            margin: 10px 0;
+            padding-left: 12px;
+            border-left: 3px solid var(--keyword-color);
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 15px;
+            font-family: var(--code-font);
+            font-size: 10px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #333;
+        }
+
+        /* Cover Specific */
+        .cover-title {
+            font-size: 32px;
+            margin-top: 30px;
+            line-height: 1.3;
+            font-family: var(--body-font);
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-family: var(--code-font);
+        }
+
+        .cover-subtitle::before {
+            content: "return ";
+            color: var(--keyword-color);
+        }
+
+        /* Syntax Highlight Colors Implementation */
+        .highlight {
+            color: var(--accent-color);
+            font-family: var(--code-font);
+            background: rgba(86, 156, 214, 0.1);
+            padding: 0 3px;
+            border-radius: 2px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        li::marker {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    {% for slide in slides %}
+    <div class="slide">
+        <!-- Decoration: Window Controls -->
+        {% if slide.is_cover %}
+        <div class="window-controls">
+            <div class="control red"></div>
+            <div class="control yellow"></div>
+            <div class="control green"></div>
+        </div>
+        {% endif %}
+
+        <!-- Header -->
+        <div class="header">
+            <div>{{ slide.header_left }}</div>
+            <div>src/main.py</div>
+        </div>
+
+        <!-- Content -->
+        <div class="content" {% if slide.is_cover %}style="text-align: left;" {% endif %}>
+            {% if slide.is_cover %}
+            <div style="font-family: var(--code-font); color: var(--text-secondary); margin-top: 20px;">
+                <span style="color: var(--keyword-color)">import</span> sys <br>
+                <span style="color: var(--keyword-color)">from</span> universe <span
+                    style="color: var(--keyword-color)">import</span> life
+            </div>
+
+            <h1 class="cover-title">{{ slide.cover_title }}</h1>
+            <div class="cover-subtitle">{{ slide.cover_subtitle }}</div>
+
+            <div style="margin-top: 40px; font-family: var(--code-font); font-size: 12px; color: #555;">
+                <span style="color: #6a9955;">// Status: Vibe Check Passed</span><br>
+                <span style="color: #6a9955;">// Author: @ParentProcess</span>
+            </div>
+            {% else %}
+            {% if slide.title %}
+            <h2 class="slide-title">{{ slide.title }}</h2>
+            {% endif %}
+            {{ slide.content | safe }}
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div>Ln {{ loop.index }}, Col 1</div>
+            <div>UTF-8</div>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+
+</html>
